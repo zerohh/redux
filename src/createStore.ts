@@ -47,6 +47,8 @@ export default function createStore<
   reducer: Reducer<S, A>,
   enhancer?: StoreEnhancer<Ext, StateExt>
 ): Store<ExtendState<S, StateExt>, A, StateExt, Ext> & Ext
+
+
 export default function createStore<
   S,
   A extends Action,
@@ -57,6 +59,10 @@ export default function createStore<
   preloadedState?: PreloadedState<S>,
   enhancer?: StoreEnhancer<Ext, StateExt>
 ): Store<ExtendState<S, StateExt>, A, StateExt, Ext> & Ext
+
+/**
+ * 此处使用的是TypeScript中函数的重载的方式，实现传入不同参数，调用不同方法
+ * */
 export default function createStore<
   S,
   A extends Action,
