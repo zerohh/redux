@@ -73,6 +73,10 @@ export default function createStore<
   preloadedState?: PreloadedState<S> | StoreEnhancer<Ext, StateExt>,
   enhancer?: StoreEnhancer<Ext, StateExt>
 ): Store<ExtendState<S, StateExt>, A, StateExt, Ext> & Ext {
+  /**
+   * 1、先判断参数，如果传了两个函数，则抛出异常，提示用户需要将多个函数
+   * 合并成一个函数
+   * */
   if (
     (typeof preloadedState === 'function' && typeof enhancer === 'function') ||
     (typeof enhancer === 'function' && typeof arguments[3] === 'function')
@@ -84,11 +88,25 @@ export default function createStore<
     )
   }
 
+  /**
+   * 2、判断如果只传了两个参数，且第二个是函数的话，则设置默认的state为undefined
+   * */
+
   if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
     enhancer = preloadedState as StoreEnhancer<Ext, StateExt>
     preloadedState = undefined
   }
 
+  /**
+   *
+   * 3、如果传了三个函数，第三个参数不是函数的话，则提示用户，增强器应该是一个函数,
+   * 到了这一步的话，第二个参数就不可能是函数了，因为上面进行了判断，给了preloadedState默认值
+   *
+   * 如果增强器是函数的话，则通过增强器增强store
+   *
+   *
+   * 增强器函数执行的结果会再返回一个函数，这个函数执行后会得到store
+   * */
   if (typeof enhancer !== 'undefined') {
     if (typeof enhancer !== 'function') {
       throw new Error('Expected the enhancer to be a function.')
@@ -103,6 +121,12 @@ export default function createStore<
     throw new Error('Expected the reducer to be a function.')
   }
 
+  /**
+   *这里将传入的参数赋值给新的变量，并且添加当前的监听函数数组，和下一个监听函数数组
+   * 以及是否在是否在调度中的状态
+   *
+   * */
+
   let currentReducer = reducer
   let currentState = preloadedState as S
   let currentListeners: (() => void)[] | null = []
@@ -115,6 +139,9 @@ export default function createStore<
    *
    * This prevents any bugs around consumers calling
    * subscribe/unsubscribe in the middle of a dispatch.
+   *
+   * 这个函数对currentListeners这个数组做了一次浅拷贝，这是为了防止用户在调度过程中，调用订阅或退订引起的bug
+   *
    */
   function ensureCanMutateNextListeners() {
     if (nextListeners === currentListeners) {
@@ -126,6 +153,9 @@ export default function createStore<
    * Reads the state tree managed by the store.
    *
    * @returns The current state tree of your application.
+   *
+   * 获取当前的state，只有在dispatch执行完成后才能获取
+   *
    */
   function getState(): S {
     if (isDispatching) {
@@ -163,6 +193,9 @@ export default function createStore<
    * @returns A function to remove this change listener.
    */
   function subscribe(listener: () => void) {
+    /**
+     * 虽然使用了typescript进行了类型校验，但是，及时ts校验失败，仍然可以编译，所以再次判断，防止出错
+     * */
     if (typeof listener !== 'function') {
       throw new Error('Expected the listener to be a function.')
     }

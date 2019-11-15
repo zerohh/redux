@@ -124,6 +124,9 @@ function assertReducerShape(reducers: ReducersMapObject) {
  * @returns A reducer function that invokes every reducer inside the passed
  *   object, and builds a state object with the same shape.
  */
+/**
+ * 函数的重载
+ * */
 export default function combineReducers<S>(
   reducers: ReducersMapObject<S, any>
 ): Reducer<CombinedState<S>>

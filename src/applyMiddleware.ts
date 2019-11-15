@@ -49,9 +49,13 @@ export default function applyMiddleware<Ext1, Ext2, Ext3, Ext4, Ext5, S>(
   middleware4: Middleware<Ext4, S, any>,
   middleware5: Middleware<Ext5, S, any>
 ): StoreEnhancer<{ dispatch: Ext1 & Ext2 & Ext3 & Ext4 & Ext5 }>
+
+
 export default function applyMiddleware<Ext, S = any>(
   ...middlewares: Middleware<any, S, any>[]
 ): StoreEnhancer<{ dispatch: Ext }>
+
+
 export default function applyMiddleware(
   ...middlewares: Middleware[]
 ): StoreEnhancer<any> {

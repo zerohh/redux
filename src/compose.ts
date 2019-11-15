@@ -100,3 +100,24 @@ export default function compose(...funcs: Function[]) {
 
   return funcs.reduce((a, b) => (...args: any) => a(b(...args)))
 }
+/**
+ *
+ * 辅助理解compose函数
+ *
+ let s = [
+ (...args)=>{console.log(1)},
+ (...args)=>{console.log(2)},
+ (...args)=>{console.log(3)},
+ (...args)=>{console.log(4)},
+ (...args)=>{console.log(5)},
+ (...args)=>{console.log(6)},
+ (...args)=>{console.log(7)},
+ ];
+
+ let result = s.reduce((a, b)=>()=>a(b()));
+ result();
+
+ *
+ * */
+
+

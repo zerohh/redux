@@ -260,6 +260,8 @@ export interface StoreCreator {
 export type StoreEnhancer<Ext = {}, StateExt = never> = (
   next: StoreEnhancerStoreCreator<Ext, StateExt>
 ) => StoreEnhancerStoreCreator<Ext, StateExt>
+
+
 export type StoreEnhancerStoreCreator<Ext = {}, StateExt = never> = <
   S = any,
   A extends Action = AnyAction
